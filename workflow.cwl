@@ -1,33 +1,34 @@
 #!/usr/bin/env cwl-runner
-#
-# Workflow for SC1
-# Inputs:
-#   submissionId: Submission ID to run this workflow on
-#   adminUploadSynId: Synapse ID of Folder accessible by admin user/team
-#   submitterUploadSynId: Synapse ID of Folder accessible by submitter
-#   workflowSynapseId: Synapse ID of File that links to workflow archive
-#   synapseConfig: filepath to .synapseConfig file
 
 cwlVersion: v1.0
 class: Workflow
+label: UCSF Microbiome Challenge Evaluation
+doc: >
+  This workflow will run and evaluate a Docker submission to the
+  MOD - Preterm Birth Prediction Microbiome Challenge (syn26133771).
+  Metrics returned are ROC, PR, Accuracy, Sensitivity, Specificity.
 
 requirements:
   - class: StepInputExpressionRequirement
 
 inputs:
-  - id: submissionId
+  adminUploadSynId:
+    label: Synapse Folder ID accessible by an admin
+    type: string
+  submissionId:
+    label: Submission ID
     type: int
-  - id: adminUploadSynId
+  submitterUploadSynId:
+    label: Synapse Folder ID accessible by the submitter
     type: string
-  - id: submitterUploadSynId
-    type: string
-  - id: workflowSynapseId
-    type: string
-  - id: synapseConfig
+  synapseConfig:
+    label: filepath to .synapseConfig file
     type: File
+  workflowSynapseId:
+    label: Synapse File ID that links to the workflow
+    type: string
 
-# No output; everything is uploaded to Synapse.
-outputs: []
+outputs: {}
 
 steps:
 
@@ -36,7 +37,6 @@ steps:
     in:
       - id: entityid
         source: "#submitterUploadSynId"
-      # TODO: replace `valueFrom` with the admin user ID or admin team ID
       - id: principalid
         valueFrom: "3433368"
       - id: permissions
@@ -50,7 +50,6 @@ steps:
     in:
       - id: entityid
         source: "#adminUploadSynId"
-      # TODO: replace `valueFrom` with the admin user ID or admin team ID
       - id: principalid
         valueFrom: "3433368"
       - id: permissions
@@ -86,7 +85,6 @@ steps:
   download_goldstandard:
     run: https://raw.githubusercontent.com/Sage-Bionetworks-Workflows/cwl-tool-synapseclient/v1.4/cwl/synapse-get-tool.cwl
     in:
-      # TODO: replace `valueFrom` with the Synapse ID to the challenge goldstandard
       - id: synapseid
         valueFrom: "syn31620119"
       - id: synapse_config
@@ -117,7 +115,6 @@ steps:
         source: "#validate_docker/status"
       - id: invalid_reasons
         source: "#validate_docker/invalid_reasons"
-      # OPTIONAL: set `default` to `false` if email notification about valid submission is needed
       - id: errors_only
         default: true
     out: [finished]
@@ -167,10 +164,8 @@ steps:
         source: "#submitterUploadSynId"
       - id: synapse_config
         source: "#synapseConfig"
-      # OPTIONAL: set `default` to `false` if log file should not be uploaded to Synapse
       - id: store
         default: true
-      # TODO: replace `valueFrom` with the absolute path to the data directory to be mounted
       - id: input_dir
         valueFrom: "/tmp"
       - id: docker_script
