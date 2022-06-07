@@ -34,11 +34,9 @@ outputs:
 baseCommand: validate.py
 arguments:
 - prefix: -p
-  valueFrom: $(inputs.input_file)
+  valueFrom: $(inputs.input_file.path)
 - prefix: -g
   valueFrom: $(inputs.goldstandard.path)
-- prefix: -e
-  valueFrom: $(inputs.entity_type)
 - prefix: -o
   valueFrom: results.json
 
