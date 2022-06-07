@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+"""Validate prediction file.
 
-"""Validate Prediction File
-
-Expected columns is dependent on Task number.
+Prediction files between Task 1 and 2 are pretty much exactly
+the same, with the exception of one column name, where:
+    - Task 1: was_preterm
+    - Task 2: was_early_preterm
 """
+
 import argparse
 import json
 
@@ -28,6 +31,7 @@ def get_args():
 
 
 def check_colnames(pred, task):
+    """Check for expected columns."""
     expected_columns = COLNAMES[task]
     if set(pred.columns) != set(expected_columns):
         return (
@@ -38,6 +42,7 @@ def check_colnames(pred, task):
 
 
 def check_dups(pred):
+    """Check for duplicate participant IDs."""
     duplicates = pred.duplicated(subset=['participant'])
     if duplicates.any():
         return (
@@ -48,6 +53,7 @@ def check_dups(pred):
 
 
 def check_missing(gold, pred):
+    """Check for missing participant IDs."""
     pred.set_index('participant', inplace=True)
     missing_rows = gold.index.difference(pred.index)
     if missing_rows.any():
@@ -59,12 +65,14 @@ def check_missing(gold, pred):
 
 
 def check_values(pred):
+    """Check that predictions column is binary."""
     if not pred.iloc[:, 0].isin([0, 1]).all():
         return f"'{pred.columns[0]}' column should only contain 0 and 1."
     return ""
 
 
 def validate(gold_file, pred_file, task_number):
+    """Validate predictions file against goldstandard."""
     errors = []
 
     gold = pd.read_csv(gold_file,
@@ -80,6 +88,7 @@ def validate(gold_file, pred_file, task_number):
 
 
 def main():
+    """Main function."""
     args = get_args()
 
     invalid_reasons = validate(
