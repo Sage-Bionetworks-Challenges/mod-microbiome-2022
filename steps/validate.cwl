@@ -12,8 +12,6 @@ inputs:
   type: File
 - id: goldstandard
   type: File
-- id: entity_type
-  type: string
 
 outputs:
 - id: results

@@ -215,8 +215,8 @@ steps:
     in:
       - id: input_file
         source: "#run_docker/predictions"
-      - id: entity_type
-        source: "#get_docker_submission/entity_type"
+      - id: goldstandard
+        source: "#download_goldstandard/filepath"
     out:
       - id: results
       - id: status
