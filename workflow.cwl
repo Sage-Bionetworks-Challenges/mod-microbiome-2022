@@ -167,7 +167,7 @@ steps:
       - id: store
         default: true
       - id: input_dir
-        valueFrom: "/tmp"
+        valueFrom: "/home/ec2-user/training_data"
       - id: docker_script
         default:
           class: File
