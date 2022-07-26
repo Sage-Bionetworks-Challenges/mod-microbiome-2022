@@ -178,7 +178,8 @@ def main(syn, args):
     with open("results.json", "w") as out:
         out.write(json.dumps({
             'submission_status': status,
-            'submission_errors': errors
+            'submission_errors': errors,
+            'admin_folder': args.parentid
         }))
 
 
