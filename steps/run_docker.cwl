@@ -1,61 +1,76 @@
 #!/usr/bin/env cwl-runner
-#
-# Run Docker Submission
-#
+
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: python3
-
-inputs:
-  - id: submissionid
-    type: int
-  - id: docker_repository
-    type: string
-  - id: docker_digest
-    type: string
-  - id: docker_registry
-    type: string
-  - id: docker_authentication
-    type: string
-  - id: parentid
-    type: string
-  - id: synapse_config
-    type: File
-  - id: task_number
-    type: string
-  - id: docker_script
-    type: File
-  - id: store
-    type: boolean?
-
-arguments: 
-  - valueFrom: $(inputs.docker_script.path)
-  - valueFrom: $(inputs.submissionid)
-    prefix: -s
-  - valueFrom: $(inputs.docker_repository)
-    prefix: -p
-  - valueFrom: $(inputs.docker_digest)
-    prefix: -d
-  - valueFrom: $(inputs.store)
-    prefix: --store
-  - valueFrom: $(inputs.parentid)
-    prefix: --parentid
-  - valueFrom: $(inputs.synapse_config.path)
-    prefix: -c
-  - valueFrom: $(inputs.task_number)
-    prefix: -t
+label: Run Docker submission
 
 requirements:
-  - class: InitialWorkDirRequirement
-    listing:
-      - $(inputs.docker_script)
-      - entryname: .docker/config.json
-        entry: |
-          {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
-  - class: InlineJavascriptRequirement
+- class: InitialWorkDirRequirement
+  listing:
+  - $(inputs.docker_script)
+  - entryname: .docker/config.json
+    entry: |
+      {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
+- class: InlineJavascriptRequirement
+
+inputs:
+- id: submissionid
+  type: int
+- id: docker_repository
+  type: string
+- id: docker_digest
+  type: string
+- id: docker_registry
+  type: string
+- id: docker_authentication
+  type: string
+- id: parentid
+  type: string
+- id: synapse_config
+  type: File
+- id: task_number
+  type: string
+- id: docker_script
+  type: File
+- id: store
+  type: boolean?
 
 outputs:
-  predictions:
-    type: File
-    outputBinding:
-      glob: predictions.csv
+- id: predictions
+  type: File?
+  outputBinding:
+    glob: predictions.csv
+- id: results
+  type: File
+  outputBinding:
+    glob: results.json
+- id: status
+  type: string
+  outputBinding:
+    glob: results.json
+    outputEval: $(JSON.parse(self[0].contents)['submission_status'])
+    loadContents: true
+- id: invalid_reasons
+  type: string
+  outputBinding:
+    glob: results.json
+    outputEval: $(JSON.parse(self[0].contents)['submission_errors'])
+    loadContents: true
+
+baseCommand: python3
+arguments:
+- valueFrom: $(inputs.docker_script.path)
+- prefix: -s
+  valueFrom: $(inputs.submissionid)
+- prefix: -p
+  valueFrom: $(inputs.docker_repository)
+- prefix: -d
+  valueFrom: $(inputs.docker_digest)
+- prefix: --store
+  valueFrom: $(inputs.store)
+- prefix: --parentid
+  valueFrom: $(inputs.parentid)
+- prefix: -c
+  valueFrom: $(inputs.synapse_config.path)
+- prefix: -t
+  valueFrom: $(inputs.task_number)

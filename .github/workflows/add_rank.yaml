@@ -1,0 +1,26 @@
+name: add_rank
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  rank:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install synapseclient challengeutils
+    - name: Add rank
+      run: |
+        python update_ranking.py
+      env: 
+        SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
