@@ -166,7 +166,7 @@ steps:
       - id: invalid_reasons
 
   email_docker:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.3/cwl/validate_email.cwl
+    run: steps/docker_status_email.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -177,7 +177,7 @@ steps:
       - id: invalid_reasons
         source: "#run_docker/invalid_reasons"
       - id: errors_only
-        default: true
+        default: false
     out: [finished]
 
   annotate_docker_run_results:
@@ -242,5 +242,5 @@ steps:
       - id: previous_annotation_finished
         source: "#annotate_docker_run_results/finished"
     out: [finished]
-    
+
  
