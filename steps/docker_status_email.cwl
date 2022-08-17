@@ -7,7 +7,7 @@ requirements:
 - class: InlineJavascriptRequirement
 - class: InitialWorkDirRequirement
   listing:
-  - entryname: validate_email.py
+  - entryname: validation_email.py
     entry: |
       #!/usr/bin/env python
       import synapseclient
