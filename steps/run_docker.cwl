@@ -74,5 +74,3 @@ arguments:
   valueFrom: $(inputs.synapse_config.path)
 - prefix: -i
   valueFrom: $(inputs.input_dir)
-- prefix: -t
-  valueFrom: $(inputs.task_number)
