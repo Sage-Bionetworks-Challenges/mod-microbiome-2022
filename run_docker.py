@@ -175,7 +175,7 @@ def main(syn, args):
         out.write(json.dumps({
             'submission_status': status,
             'submission_errors': errors,
-            'admin_folder': args.parentid
+            'log_folder': args.parentid
         }))
 
 
