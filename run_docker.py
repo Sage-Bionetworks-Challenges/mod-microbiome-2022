@@ -88,12 +88,9 @@ def main(syn, args):
 
     # Get Docker image to run and volumes to be mounted.
     docker_image = args.docker_repository + "@" + args.docker_digest
+    input_dir = args.input_dir
     output_dir = os.getcwd()
-    if args.task_number == "1":
-        input_dir = "/home/ec2-user/task1_input"
-    else:
-        input_dir = "/home/ec2-user/task2_input"
-    container_name = f"{args.submissionid}_task{args.task_number}"
+    container_name = f"{args.submissionid}_training"
 
     print("mounting volumes")
     mounted_volumes = {output_dir: '/output:rw',
@@ -190,8 +187,8 @@ if __name__ == '__main__':
                         help="Docker Repository")
     parser.add_argument("-d", "--docker_digest", required=True,
                         help="Docker Digest")
-    parser.add_argument("-t", "--task_number", choices=["1", "2"],
-                        required=True, help="Task number of submission")
+    parser.add_argument("-i", "--input_dir", required=True,
+                        help="Input Directory")
     parser.add_argument("-c", "--synapse_config", required=True,
                         help="credentials file")
     parser.add_argument("--store", action='store_true',

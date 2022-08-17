@@ -28,7 +28,7 @@ inputs:
   type: string
 - id: synapse_config
   type: File
-- id: task_number
+- id: input_dir
   type: string
 - id: docker_script
   type: File
@@ -72,5 +72,7 @@ arguments:
   valueFrom: $(inputs.parentid)
 - prefix: -c
   valueFrom: $(inputs.synapse_config.path)
+- prefix: -i
+  valueFrom: $(inputs.input_dir)
 - prefix: -t
   valueFrom: $(inputs.task_number)
