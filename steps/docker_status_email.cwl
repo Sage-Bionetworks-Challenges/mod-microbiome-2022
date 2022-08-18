@@ -43,7 +43,7 @@ requirements:
         subject = "Submission to '%s' valid!" % evaluation.name
         message = ["Hello %s,\n\n" % name,
                     "We ran your submission (id: %s) against the training data and was able to generate a predictions file!  Feel free to submit your model to the official queue(s).\n\n" % sub.id,
-                    "Note: this queue does guarantee the success of running your model against the test data.\n\n",
+                    "Note: this queue does not guarantee the success of running your model against the test data.\n\n",
                     "Sincerely,\nChallenge Administrator"]
       syn.sendMessage(
             userIds=[participantid],
