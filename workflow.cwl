@@ -176,8 +176,6 @@ steps:
         source: "#run_docker/status"
       - id: invalid_reasons
         source: "#run_docker/invalid_reasons"
-      - id: errors_only
-        default: false
     out: [finished]
 
   annotate_docker_run_results:
@@ -196,51 +194,3 @@ steps:
       - id: previous_annotation_finished
         source: "#annotate_docker_validation_with_output/finished"
     out: [finished]
-
-  check_docker_run_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.3/cwl/check_status.cwl
-    in:
-      - id: status
-        source: "#run_docker/status"
-      - id: previous_annotation_finished
-        source: "#annotate_docker_run_results/finished"
-      - id: previous_email_finished
-        source: "#email_docker/finished"
-    out: [finished]
-
-  upload_results:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.3/cwl/upload_to_synapse.cwl
-    in:
-      - id: infile
-        source: "#run_docker/predictions"
-      - id: parentid
-        source: "#adminUploadSynId"
-      - id: used_entity
-        source: "#get_docker_submission/entity_id"
-      - id: executed_entity
-        source: "#workflowSynapseId"
-      - id: synapse_config
-        source: "#synapseConfig"
-    out:
-      - id: uploaded_fileid
-      - id: uploaded_file_version
-      - id: results
-
-  annotate_docker_upload_results:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.3/cwl/annotate_submission.cwl
-    in:
-      - id: submissionid
-        source: "#submissionId"
-      - id: annotation_values
-        source: "#upload_results/results"
-      - id: to_public
-        default: true
-      - id: force
-        default: true
-      - id: synapse_config
-        source: "#synapseConfig"
-      - id: previous_annotation_finished
-        source: "#annotate_docker_run_results/finished"
-    out: [finished]
-
- 
