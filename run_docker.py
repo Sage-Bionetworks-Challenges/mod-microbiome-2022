@@ -21,11 +21,32 @@ def create_log_file(log_filename, log_text=None):
             log_file.write("No Logs")
 
 
+def get_last_lines(log_filename, n=5):
+    """Get last N lines of log file (default=5)."""
+    lines = 0
+    with open(log_filename, "rb") as f:
+        try:
+            f.seek(-2, os.SEEK_END)
+            while lines < n:
+                f.seek(-2, os.SEEK_CUR)
+                if f.read(1) == b"\n":
+                    lines += 1
+        except OSError:
+            f.seek(0)
+        last_lines = f.read().decode()
+    return last_lines
+
+
 def store_log_file(syn, log_filename, parentid, store=True):
     """Store log file"""
     statinfo = os.stat(log_filename)
-    if statinfo.st_size > 0 and statinfo.st_size/1000.0 <= 50:
+    if statinfo.st_size > 0:
+        # If log file is larger than 50Kb, only save last 5 lines.
+        if statinfo.st_size/1000.0 > 50:
+            log_tail = get_last_lines(log_filename)
+            create_log_file(log_filename, log_tail)
         ent = synapseclient.File(log_filename, parent=parentid)
+
         if store:
             try:
                 syn.store(ent)
