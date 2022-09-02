@@ -148,7 +148,7 @@ def main(syn, args):
                                               volumes=volumes,
                                               name=container_name,
                                               network_disabled=True,
-                                              mem_limit='6g',
+                                              mem_limit='18g',
                                               stderr=True,
                                               runtime="nvidia")
         except docker.errors.APIError as err:
