@@ -148,7 +148,7 @@ def main(syn, args):
                                               volumes=volumes,
                                               name=container_name,
                                               network_disabled=True,
-                                              mem_limit='12g',
+                                              mem_limit='7g',
                                               stderr=True)
         except docker.errors.APIError as err:
             container = None
