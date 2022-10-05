@@ -14,13 +14,12 @@ inputs:
 outputs:
 - id: task_number
   type: string
-
-expression: |
+expression: |2
 
   ${
-    if(inputs.queue == "9614880" || inputs.queue == "9615050"){
+    if(inputs.queue == "9615099") {
       return {task_number: "1"};
-    } else if (inputs.queue == "9615049" || inputs.queue == "9615051") {
+    } else if (inputs.queue == "9615100") {
       return {task_number: "2"};
     } else {
       throw 'invalid queue';
